@@ -43,7 +43,7 @@ SELECT
 	authors.au_id AS "AUTHOR ID",
 	authors.au_lname AS "LAST NAME",
 	authors.au_fname AS "FIRST NAME",
-	COUNT(titleauthor.title_id) AS "TOTAL"
+	SUM(titles.ytd_sales) AS "TOTAL"
 FROM authors 
 JOIN titleauthor 
 	ON authors.au_id = titleauthor.au_id
@@ -53,24 +53,24 @@ GROUP BY
     authors.au_id,
     authors.au_lname,
     authors.au_fname
-ORDER BY "TOTAL" DESC
+ORDER BY SUM(titles.ytd_sales) DESC
 LIMIT 3;
 
 
 -- Challenge 4
 
 SELECT 
-	authors.au_id AS "AUTHOR ID",
-	authors.au_lname AS "LAST NAME",
-	authors.au_fname AS "FIRST NAME",
-	COALESCE(COUNT(titleauthor.title_id), 0) AS "TOTAL"	
-FROM authors 
-LEFT JOIN titleauthor 
-	ON authors.au_id = titleauthor.au_id
-LEFT JOIN titles 
-	ON titles.title_id = titleauthor.title_id
+    authors.au_id AS "AUTHOR ID",
+    authors.au_lname AS "LAST NAME",
+    authors.au_fname AS "FIRST NAME",
+    COALESCE(SUM(titles.ytd_sales), 0) AS "TOTAL"
+FROM authors
+LEFT JOIN titleauthor
+    ON authors.au_id = titleauthor.au_id
+LEFT JOIN titles
+    ON titles.title_id = titleauthor.title_id
 GROUP BY
     authors.au_id,
     authors.au_lname,
     authors.au_fname
-ORDER BY "TOTAL" DESC;
+ORDER BY SUM(titles.ytd_sales) DESC;
